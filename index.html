@@ -144,7 +144,7 @@
   .output-text.editing{ outline:2px dashed var(--gold); background:#FFFDF6; cursor:text; }
   .btn-primary.has-warning{ background:#D97757; color:#fff; }
   .btn-primary.has-warning:hover{ background:#c96745; }
-  #confirmModalOverlay, #wakalaVerifyModalOverlay, #clerkWarningModalOverlay, #timerResultModalOverlay{ position:fixed; inset:0; background:rgba(15,25,20,.55); z-index:100;
+  #confirmModalOverlay, #wakalaVerifyModalOverlay, #clerkWarningModalOverlay, #timerResultModalOverlay, #closingArgumentModalOverlay{ position:fixed; inset:0; background:rgba(15,25,20,.55); z-index:100;
     display:flex; align-items:center; justify-content:center; padding:20px; }
   #confirmModalBox, #wakalaVerifyModalBox, #clerkWarningModalBox{ background:#fff; border-radius:12px; padding:22px 20px; max-width:420px; width:100%;
     border:1px solid var(--gold); box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; }
@@ -292,29 +292,40 @@
       </div>
 
       <div class="sub-fields" id="plaintiff-selfIdentity-section" style="display:none;">
-        <label>الجنسية</label>
-        <div class="choice-group" data-group="plaintiff-nationalityType">
-          <div class="choice-btn active" data-value="سعودي">سعودي</div>
-          <div class="choice-btn" data-value="غير ذلك">غير ذلك</div>
+        <label>صفة الحاضر</label>
+        <div class="choice-group" data-group="plaintiff-entityType">
+          <div class="choice-btn active" data-value="فرد">فرد</div>
+          <div class="choice-btn" data-value="شركة">شركة</div>
         </div>
-        <div class="field" id="plaintiff-saudiId-field">
-          <label>رقم الهوية الوطنية <span style="color:#8C3B3B;">*</span></label>
-          <input type="text" id="plaintiff-saudiId" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
+        <div id="plaintiff-individualId-block">
+          <label>الجنسية</label>
+          <div class="choice-group" data-group="plaintiff-nationalityType">
+            <div class="choice-btn active" data-value="سعودي">سعودي</div>
+            <div class="choice-btn" data-value="غير ذلك">غير ذلك</div>
+          </div>
+          <div class="field" id="plaintiff-saudiId-field">
+            <label>رقم الهوية الوطنية <span style="color:#8C3B3B;">*</span></label>
+            <input type="text" id="plaintiff-saudiId" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
+          </div>
+          <div id="plaintiff-foreignId-block" style="display:none;">
+            <div class="field" style="position:relative;">
+              <label>الجنسية <span style="color:#8C3B3B;">*</span></label>
+              <input type="text" id="plaintiff-foreignNationality" placeholder="اكتب للبحث عن الجنسية" autocomplete="off" required>
+              <div class="nat-dropdown" id="plaintiff-foreignNationality-list" style="display:none;"></div>
+            </div>
+            <div class="field">
+              <label>رقم الإقامة <span style="color:#8C3B3B;">*</span></label>
+              <input type="text" id="plaintiff-iqamaNum" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
+            </div>
+          </div>
         </div>
-        <div id="plaintiff-foreignId-block" style="display:none;">
-          <div class="field" style="position:relative;">
-            <label>الجنسية <span style="color:#8C3B3B;">*</span></label>
-            <input type="text" id="plaintiff-foreignNationality" placeholder="اكتب للبحث عن الجنسية" autocomplete="off" required>
-            <div class="nat-dropdown" id="plaintiff-foreignNationality-list" style="display:none;"></div>
-          </div>
-          <div class="field">
-            <label>رقم الإقامة <span style="color:#8C3B3B;">*</span></label>
-            <input type="text" id="plaintiff-iqamaNum" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
-          </div>
+        <div class="field" id="plaintiff-crNum-field" style="display:none;">
+          <label>رقم السجل التجاري <span style="color:#8C3B3B;">*</span></label>
+          <input type="text" id="plaintiff-crNum" placeholder="رقم السجل التجاري" inputmode="numeric" data-numeric-only="true" required>
         </div>
       </div>
 
-      <label>الجنس</label>
+      <label id="plaintiff-gender-label">الجنس</label>
       <div class="choice-group" data-group="plaintiff-gender">
         <div class="choice-btn active" data-value="م">مذكر</div>
         <div class="choice-btn" data-value="ف">مؤنث</div>
@@ -490,29 +501,40 @@
       </div>
 
       <div class="sub-fields" id="defendant-selfIdentity-section" style="display:none;">
-        <label>الجنسية</label>
-        <div class="choice-group" data-group="defendant-nationalityType">
-          <div class="choice-btn active" data-value="سعودي">سعودي</div>
-          <div class="choice-btn" data-value="غير ذلك">غير ذلك</div>
+        <label>صفة الحاضر</label>
+        <div class="choice-group" data-group="defendant-entityType">
+          <div class="choice-btn active" data-value="فرد">فرد</div>
+          <div class="choice-btn" data-value="شركة">شركة</div>
         </div>
-        <div class="field" id="defendant-saudiId-field">
-          <label>رقم الهوية الوطنية <span style="color:#8C3B3B;">*</span></label>
-          <input type="text" id="defendant-saudiId" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
+        <div id="defendant-individualId-block">
+          <label>الجنسية</label>
+          <div class="choice-group" data-group="defendant-nationalityType">
+            <div class="choice-btn active" data-value="سعودي">سعودي</div>
+            <div class="choice-btn" data-value="غير ذلك">غير ذلك</div>
+          </div>
+          <div class="field" id="defendant-saudiId-field">
+            <label>رقم الهوية الوطنية <span style="color:#8C3B3B;">*</span></label>
+            <input type="text" id="defendant-saudiId" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
+          </div>
+          <div id="defendant-foreignId-block" style="display:none;">
+            <div class="field" style="position:relative;">
+              <label>الجنسية <span style="color:#8C3B3B;">*</span></label>
+              <input type="text" id="defendant-foreignNationality" placeholder="اكتب للبحث عن الجنسية" autocomplete="off" required>
+              <div class="nat-dropdown" id="defendant-foreignNationality-list" style="display:none;"></div>
+            </div>
+            <div class="field">
+              <label>رقم الإقامة <span style="color:#8C3B3B;">*</span></label>
+              <input type="text" id="defendant-iqamaNum" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
+            </div>
+          </div>
         </div>
-        <div id="defendant-foreignId-block" style="display:none;">
-          <div class="field" style="position:relative;">
-            <label>الجنسية <span style="color:#8C3B3B;">*</span></label>
-            <input type="text" id="defendant-foreignNationality" placeholder="اكتب للبحث عن الجنسية" autocomplete="off" required>
-            <div class="nat-dropdown" id="defendant-foreignNationality-list" style="display:none;"></div>
-          </div>
-          <div class="field">
-            <label>رقم الإقامة <span style="color:#8C3B3B;">*</span></label>
-            <input type="text" id="defendant-iqamaNum" placeholder="أدخل 10 أرقام فقط" maxlength="10" inputmode="numeric" data-numeric-only="true" required>
-          </div>
+        <div class="field" id="defendant-crNum-field" style="display:none;">
+          <label>رقم السجل التجاري <span style="color:#8C3B3B;">*</span></label>
+          <input type="text" id="defendant-crNum" placeholder="رقم السجل التجاري" inputmode="numeric" data-numeric-only="true" required>
         </div>
       </div>
 
-      <label>الجنس</label>
+      <label id="defendant-gender-label">الجنس</label>
       <div class="choice-group" data-group="defendant-gender">
         <div class="choice-btn active" data-value="م">مذكر</div>
         <div class="choice-btn" data-value="ف">مؤنث</div>
@@ -832,6 +854,18 @@
     </div>
   </div>
 
+  <div id="closingArgumentModalOverlay" style="display:none;">
+    <div id="closingArgumentModalBox">
+      <p style="font-size:22px; margin:0 0 8px;">⚖️</p>
+      <p style="font-weight:700; margin:0 0 8px;">قفل باب المرافعة</p>
+      <p>هل أنت متأكد من النطق بالحكم في هذه الجلسة؟</p>
+      <div class="actions" style="margin-top:14px; justify-content:center;">
+        <button type="button" class="btn btn-primary" id="closingArgumentModalYes">نعم، أضِف</button>
+        <button type="button" class="btn btn-ghost-nav" id="closingArgumentModalNo">لا</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -1009,11 +1043,13 @@ function freshPartyState(){
     kinshipType:'نسب', kinship:'', asharDirection:'الزوجة', kinshipAshar:'', hasAccompanyingAgent:false, specialCase:'none',
     oathAbsence:'لا', oathTablighNum:'',
     nationalityType:'سعودي', saudiId:'', foreignNationality:'', iqamaNum:'',
-    oathPerformanceSession:'لا', oathAnswerText:'' };
+    oathPerformanceSession:'لا', oathAnswerText:'',
+    entityType:'فرد', crNum:'' };
 }
 const state = {
   sessionType: null,
   sameJudge: 'نعم',
+  closeArgumentEnabled: false,
   plaintiff: freshPartyState(),
   defendant: freshPartyState(),
   extraPlaintiffs: [],
@@ -1150,7 +1186,8 @@ function renderExtraCards(role){
 function updatePrimaryNameFieldVisibility(role){
   const arr = role==='plaintiff' ? state.extraPlaintiffs : state.extraDefendants;
   const s = state[role];
-  $(`${role}-name-field`).style.display = (arr.length > 0 || s.attendance === 'أصالة') ? 'block' : 'none';
+  const show = s.attendance !== 'لم يحضر' && (arr.length > 0 || s.attendance === 'أصالة');
+  $(`${role}-name-field`).style.display = show ? 'block' : 'none';
 }
 
 ['plaintiffExtraContainer','defendantExtraContainer'].forEach(cid=>{
@@ -1204,6 +1241,7 @@ $('defendant-name').addEventListener('input', e=>{ state.defendant.name = e.targ
   $(`${party}-saudiId`).addEventListener('input', e=>{ state[party].saudiId = e.target.value; render(); });
   setupNationalitySearch(`${party}-foreignNationality`, `${party}-foreignNationality-list`, party);
   $(`${party}-iqamaNum`).addEventListener('input', e=>{ state[party].iqamaNum = e.target.value; render(); });
+  $(`${party}-crNum`).addEventListener('input', e=>{ state[party].crNum = e.target.value; render(); });
 });
 
 function buildExtraClause(role, idx, p){
@@ -1358,6 +1396,24 @@ function handleChoice(key, value){
     state[party].nationalityType = value;
     $(`${party}-saudiId-field`).style.display = value === 'سعودي' ? 'block' : 'none';
     $(`${party}-foreignId-block`).style.display = value === 'غير ذلك' ? 'block' : 'none';
+  } else if(field === 'entityType'){
+    state[party].entityType = value;
+    const isCompany = value === 'شركة';
+    $(`${party}-individualId-block`).style.display = isCompany ? 'none' : 'block';
+    $(`${party}-crNum-field`).style.display = isCompany ? 'block' : 'none';
+    $(`${party}-gender-label`).style.display = isCompany ? 'none' : 'block';
+    const genderGroup = document.querySelector(`.choice-group[data-group="${party}-gender"]`);
+    if(genderGroup) genderGroup.style.display = isCompany ? 'none' : 'flex';
+    if(isCompany){
+      state[party].gender = 'ف';
+      if(genderGroup){
+        genderGroup.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('active'));
+        const femBtn = genderGroup.querySelector('[data-value="ف"]');
+        if(femBtn) femBtn.classList.add('active');
+      }
+      updateGenderedLabels(party);
+      updateAgentGenderedLabels(party);
+    }
   } else if(field === 'oathAbsence'){
     state.defendant.oathAbsence = value;
     $('defendant-oathTabligh-field').style.display = value === 'نعم' ? 'block' : 'none';
@@ -1697,6 +1753,10 @@ function buildAccompanyingAgentClause(s, name, suffix){
 }
 
 function buildIdentityClause(s){
+  if(s.entityType === 'شركة'){
+    const cr = s.crNum.trim() || '...........';
+    return `، بموجب السجل التجاري رقم (${cr})`;
+  }
   if(s.nationalityType === 'سعودي'){
     const id = s.saudiId.trim() || '...........';
     return `، بموجب الهوية الوطنية رقم (${id})`;
@@ -1787,6 +1847,37 @@ function buildOathPerformanceText(){
   const qa = isFem ? 'قائلة' : 'قائلاً';
   const answer = s.oathAnswerText.trim() || '...........';
   return `وبسؤال ${label} الحاضر${isFem?'ة':''} هل ${youWord} ${readyWord} لأداء اليمين؟ ف${verb} ${qa}: ${answer}. هكذا ${verb}`;
+}
+
+function buildClosingArgumentText(){
+  const pPresent = state.plaintiff.attendance !== 'لم يحضر';
+  const dPresent = state.defendant.attendance !== 'لم يحضر';
+  if(!pPresent && !dPresent) return '';
+
+  function speakerGender(role){
+    const s = state[role];
+    return s.attendance === 'تمثيل' ? s.agentGender : s.gender;
+  }
+  function addresseeLabel(role){
+    const s = state[role];
+    const g = speakerGender(role);
+    const pName = partyLabel(role, s.gender);
+    return s.attendance === 'تمثيل' ? `وكيل${g==='ف'?'ة':''} ${pName}` : pName;
+  }
+
+  if(pPresent && dPresent){
+    const bothFem = speakerGender('plaintiff')==='ف' && speakerGender('defendant')==='ف';
+    const verbDecide = bothFem ? 'قررتا' : 'قررا';
+    return `ثم جرى من الدائرة سؤال أطراف الدعوى هل لديكما ما تضيفانه؟ ف${verbDecide}: ليس لدينا سوى ما قدمنا. هكذا ${verbDecide}، واستناداً للمادة (69) والمادة (159) من نظام المرافعات الشرعية فقد قررت الدائرة قفل باب المرافعة للنطق بالحكم في هذه الجلسة`;
+  }
+
+  const role = pPresent ? 'plaintiff' : 'defendant';
+  const isFem = speakerGender(role) === 'ف';
+  const label = addresseeLabel(role);
+  const hasIt = isFem ? 'لديها' : 'لديه';
+  const addVerb = isFem ? 'تضيفه' : 'يضيفه';
+  const decideVerb = isFem ? 'قررت' : 'قرر';
+  return `ثم جرى من الدائرة سؤال ${label} هل ${hasIt} ما ${addVerb}؟ ف${decideVerb}: ليس لدي سوى ما قدمت. هكذا ${decideVerb}، واستناداً للمادة (69) والمادة (159) من نظام المرافعات الشرعية فقد قررت الدائرة قفل باب المرافعة للنطق بالحكم في هذه الجلسة`;
 }
 
 function buildPreviousSessionRatification(){
@@ -2038,6 +2129,9 @@ function render(){
         text += ' واستناداً إلى المادة السابعة والستون بعد المائة من نظام المرافعات الشرعية: إذا انتهت ولايـة القـاضي بالنسبة إلى قضيـة ما قبل النطق بالحكم فيها، فلخلفه الاستمرار في نظرها من الحد الذي انتهت إليه إجراءاتها لدى سلفه بعد تلاوة ما تم ضبطه سابقًا على الخصوم، فإن كانت موقعة بتوقيع القاضي السابق على توقيعات المترافعين والشهود فيعتمدها، وإن كان ما تم ضبطه غير موقع من المترافعين أو أحدهم أو القاضي ولم يصدّق المترافعون عليه فإن المرافعة تعاد من جديد.';
         text += buildPreviousSessionRatification();
       }
+      if(state.closeArgumentEnabled){
+        text = text.replace(/\.\s*$/, '') + '، ' + buildClosingArgumentText() + '.';
+      }
     }
   }
   {
@@ -2219,8 +2313,20 @@ $('nextStepBtn').addEventListener('click', ()=>{
     currentStep = list[idx+1];
     showStep();
   } else {
-    enterReviewMode();
+    $('closingArgumentModalOverlay').style.display = 'flex';
   }
+});
+$('closingArgumentModalYes').addEventListener('click', ()=>{
+  state.closeArgumentEnabled = true;
+  $('closingArgumentModalOverlay').style.display = 'none';
+  render();
+  enterReviewMode();
+});
+$('closingArgumentModalNo').addEventListener('click', ()=>{
+  state.closeArgumentEnabled = false;
+  $('closingArgumentModalOverlay').style.display = 'none';
+  render();
+  enterReviewMode();
 });
 $('prevStepBtn').addEventListener('click', ()=>{
   const list = getStepList();
@@ -2263,10 +2369,14 @@ function updateWarnings(){
     }
     if(s.attendance === 'أصالة'){
       if(!s.name.trim()) w.push(`لم يُدخل اسم ${partyLabelAr[p]}.`);
-      if(s.nationalityType === 'سعودي' && (!s.saudiId || s.saudiId.length !== 10)) w.push(`رقم هوية ${partyLabelAr[p]} غير مكتمل (10 أرقام).`);
-      if(s.nationalityType === 'غير ذلك'){
-        if(!s.foreignNationality.trim()) w.push(`لم تُحدَّد جنسية ${partyLabelAr[p]}.`);
-        if(!s.iqamaNum || s.iqamaNum.length !== 10) w.push(`رقم إقامة ${partyLabelAr[p]} غير مكتمل (10 أرقام).`);
+      if(s.entityType === 'شركة'){
+        if(!s.crNum.trim()) w.push(`لم يُدخل رقم السجل التجاري لـ${partyLabelAr[p]}.`);
+      } else {
+        if(s.nationalityType === 'سعودي' && (!s.saudiId || s.saudiId.length !== 10)) w.push(`رقم هوية ${partyLabelAr[p]} غير مكتمل (10 أرقام).`);
+        if(s.nationalityType === 'غير ذلك'){
+          if(!s.foreignNationality.trim()) w.push(`لم تُحدَّد جنسية ${partyLabelAr[p]}.`);
+          if(!s.iqamaNum || s.iqamaNum.length !== 10) w.push(`رقم إقامة ${partyLabelAr[p]} غير مكتمل (10 أرقام).`);
+        }
       }
     }
     const needsWakeelCheck = s.attendance === 'تمثيل' && s.repType === 'وكيل';
