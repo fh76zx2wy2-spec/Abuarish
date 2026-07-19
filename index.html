@@ -63,8 +63,11 @@
   .time-picker{ display:flex; align-items:center; gap:6px; background:var(--navy-2); border-radius:8px; padding:8px 10px; direction:ltr; justify-content:center; }
   .time-picker select{ background:var(--navy); color:#F4EFE2; border:1px solid #1c5b42; text-align:center;
     font-family:'Tajawal',sans-serif; font-weight:700; font-size:16px; padding:6px 4px; border-radius:6px; }
+  .time-picker select.period-select{ font-size:14px; padding:6px 8px; min-width:118px; border-color:var(--gold); }
   .time-picker .colon{ color:var(--gold-light); font-weight:700; font-size:18px; }
   .time-picker select:focus{ outline:2px solid var(--gold); }
+  #openPeriodHint{ margin-top:6px; text-align:center; font-weight:700; color:var(--navy); background:var(--gold-light); border-radius:6px; padding:6px 8px; }
+  body.dark #openPeriodHint{ color:var(--gold-light); background:#2C3A48; }
   .output-card{ background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%); color:#F4EFE2; border:none; }
   .output-card h2{ color:#fff; border-bottom:2px solid rgba(255,255,255,.15); }
   .output-text{ background:#FDFBF3; color:var(--ink); border-radius:6px; padding:26px 24px; line-height:2.1;
@@ -144,7 +147,7 @@
   .output-text.editing{ outline:2px dashed var(--gold); background:#FFFDF6; cursor:text; }
   .btn-primary.has-warning{ background:#D97757; color:#fff; }
   .btn-primary.has-warning:hover{ background:#c96745; }
-  #confirmModalOverlay, #wakalaVerifyModalOverlay, #clerkWarningModalOverlay, #timerResultModalOverlay, #closingArgumentModalOverlay{ position:fixed; inset:0; background:rgba(15,25,20,.55); z-index:100;
+  #confirmModalOverlay, #wakalaVerifyModalOverlay, #clerkWarningModalOverlay, #timerResultModalOverlay{ position:fixed; inset:0; background:rgba(15,25,20,.55); z-index:100;
     display:flex; align-items:center; justify-content:center; padding:20px; }
   #confirmModalBox, #wakalaVerifyModalBox, #clerkWarningModalBox{ background:#fff; border-radius:12px; padding:22px 20px; max-width:420px; width:100%;
     border:1px solid var(--gold); box-shadow:0 10px 30px rgba(0,0,0,.3); text-align:center; }
@@ -259,11 +262,12 @@
         <select id="openHour"></select>
         <span class="colon">:</span>
         <select id="openMinute"></select>
-        <select id="openPeriod">
-          <option value="ص">ص</option>
-          <option value="م">م</option>
+        <select id="openPeriod" class="period-select">
+          <option value="ص">☀️ صباحًا (٨-١١)</option>
+          <option value="م">🌙 مساءً (١٢-٣)</option>
         </select>
       </div>
+      <div class="hint" id="openPeriodHint"></div>
     </div>
   </div>
 
@@ -854,18 +858,6 @@
     </div>
   </div>
 
-  <div id="closingArgumentModalOverlay" style="display:none;">
-    <div id="closingArgumentModalBox">
-      <p style="font-size:22px; margin:0 0 8px;">⚖️</p>
-      <p style="font-weight:700; margin:0 0 8px;">قفل باب المرافعة</p>
-      <p>هل أنت متأكد من النطق بالحكم في هذه الجلسة؟</p>
-      <div class="actions" style="margin-top:14px; justify-content:center;">
-        <button type="button" class="btn btn-primary" id="closingArgumentModalYes">نعم، أضِف</button>
-        <button type="button" class="btn btn-ghost-nav" id="closingArgumentModalNo">لا</button>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <script>
@@ -1049,7 +1041,7 @@ function freshPartyState(){
 const state = {
   sessionType: null,
   sameJudge: 'نعم',
-  closeArgumentEnabled: false,
+  closeArgumentEnabled: true,
   plaintiff: freshPartyState(),
   defendant: freshPartyState(),
   extraPlaintiffs: [],
@@ -1683,9 +1675,17 @@ function updateOathDefendantStatusHint(){
     : 'المدعى عليه حاضر حاليًا (حسب حالة حضوره في بيانات الأطراف).';
 }
 
+function updateOpenPeriodHint(){
+  const hour = Number($('openHour').value);
+  const minute = Number($('openMinute').value);
+  const period = $('openPeriod').value;
+  const words = buildTimeArabic(hour, minute, period);
+  $('openPeriodHint').textContent = `الوقت المحدد: الساعة ${words}`;
+}
 ['openHour','openMinute','openPeriod'].forEach(id=>{
-  $(id).addEventListener('change', render);
+  $(id).addEventListener('change', ()=>{ updateOpenPeriodHint(); render(); });
 });
+updateOpenPeriodHint();
 
 /* ---------- text builders ---------- */
 function partyLabel(role, gender){
@@ -1821,12 +1821,17 @@ function buildOathAbsenceDefendantText(){
   const p = state.plaintiff;
   const dName = partyLabel('defendant', d.gender);
   const dSuffix = d.gender==='م' ? 'ه' : 'ها';
-  const pName = partyLabel('plaintiff', p.gender);
-  const pVerb = p.gender==='م' ? 'فقرر' : 'فقررت';
-  const pVerbEnd = p.gender==='م' ? 'قرر' : 'قررت';
+  const isRepresented = p.attendance === 'تمثيل';
+  const speakerGender = isRepresented ? p.agentGender : p.gender;
+  const isFem = speakerGender === 'ف';
+  const pName = isRepresented ? `وكيل${p.agentGender==='ف'?'ة':''} ${partyLabel('plaintiff', p.gender)}` : partyLabel('plaintiff', p.gender);
+  const hasIt = isFem ? 'لديها' : 'لديه';
+  const addVerb = isFem ? 'تضيفه' : 'يضيفه';
+  const pVerb = isFem ? 'فقررت' : 'فقرر';
+  const pVerbEnd = isFem ? 'قررت' : 'قرر';
   const tablighNum = d.oathTablighNum.trim() || '...........';
 
-  return `ولم يحضر ${dName} المدون اسم${dSuffix} أعلاه، ولا مَنْ يُمثِّل${dSuffix}، رغم تبلُّغ${dSuffix} لـ( شخص${dSuffix} ) بموعد هذه الجلسة المخصصة لأداء اليمين على نفي الدعوى بناءً على إفادة التبليغ الإلكتروني بالنظام رقم ( ${tablighNum} ) والمتضمنة: "تم التبليغ". ولما نصت عليه الفقرة (2) من المادة (الثالثة بعد المائة) من نظام الإثبات بأن من تخلف عن الحضور لأداء اليمين بغير عذر عُدّ ناكلاً، ثم جرى من الدائرة سؤال ${pName} هل لديه ما يضيفه؟ ${pVerb}: ليس لدي سوى ما قدمت هكذا ${pVerbEnd}، واستناداً للمادة (69) والمادة (159) من نظام المرافعات الشرعية فقد قررت الدائرة قفل باب المرافعة للنطق بالحكم في هذه الجلسة`;
+  return `ولم يحضر ${dName} المدون اسم${dSuffix} أعلاه، ولا مَنْ يُمثِّل${dSuffix}، رغم تبلُّغ${dSuffix} لـ( شخص${dSuffix} ) بموعد هذه الجلسة المخصصة لأداء اليمين على نفي الدعوى بناءً على إفادة التبليغ الإلكتروني بالنظام رقم ( ${tablighNum} ) والمتضمنة: "تم التبليغ". ولما نصت عليه الفقرة (2) من المادة (الثالثة بعد المائة) من نظام الإثبات بأن من تخلف عن الحضور لأداء اليمين بغير عذر عُدّ ناكلاً، ثم جرى من الدائرة سؤال ${pName} هل ${hasIt} ما ${addVerb}؟ ${pVerb}: ليس لدي سوى ما قدمت هكذا ${pVerbEnd}، واستناداً للمادة (69) والمادة (159) من نظام المرافعات الشرعية فقد قررت الدائرة قفل باب المرافعة للنطق بالحكم في هذه الجلسة`;
 }
 
 function buildNotNotifiedClause(role, s){
@@ -2313,20 +2318,10 @@ $('nextStepBtn').addEventListener('click', ()=>{
     currentStep = list[idx+1];
     showStep();
   } else {
-    $('closingArgumentModalOverlay').style.display = 'flex';
+    state.closeArgumentEnabled = true;
+    render();
+    enterReviewMode();
   }
-});
-$('closingArgumentModalYes').addEventListener('click', ()=>{
-  state.closeArgumentEnabled = true;
-  $('closingArgumentModalOverlay').style.display = 'none';
-  render();
-  enterReviewMode();
-});
-$('closingArgumentModalNo').addEventListener('click', ()=>{
-  state.closeArgumentEnabled = false;
-  $('closingArgumentModalOverlay').style.display = 'none';
-  render();
-  enterReviewMode();
 });
 $('prevStepBtn').addEventListener('click', ()=>{
   const list = getStepList();
