@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Alyamama&family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#2C4A68; --navy-2:#1B3247; --gold:#B0975F; --gold-light:#D9CBA3;
+    --navy:#1F5D45; --navy-2:#12402F; --gold:#B0975F; --gold-light:#D9CBA3;
     --paper:#F7F3EA; --ink:#242220; --line:#DCD3BE; --grey-bg:#ECE5D5; --grey-txt:#8a8270;
   }
   *{box-sizing:border-box;}
@@ -27,7 +27,9 @@
   header h1{ font-family:'Alyamama','Aref Ruqaa',serif; font-size:30px; margin:0 0 4px; color:#fff; letter-spacing:.5px; text-shadow:0 2px 10px rgba(0,0,0,.55); }
   header p{ margin:0; font-size:13px; color:var(--gold-light); opacity:.95; text-shadow:0 1px 6px rgba(0,0,0,.5); }
   .wrap{ max-width:960px; margin:0 auto; padding:22px 16px 60px; display:grid; gap:18px; }
-  .card{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px 18px 20px; box-shadow:0 2px 10px rgba(15,61,44,.07); }
+  .card{ background:#fff; border:1px solid var(--line); border-top:3px solid var(--gold); border-radius:14px;
+    padding:20px 18px 22px; box-shadow:0 4px 16px rgba(15,61,44,.06); transition:box-shadow .2s ease, transform .2s ease; }
+  .card:hover{ box-shadow:0 6px 20px rgba(15,61,44,.1); }
   .card h2{ font-size:16px; margin:0 0 14px; color:var(--navy); display:flex; align-items:center; gap:8px;
     border-bottom:2px solid var(--line); padding-bottom:10px; }
   .card h2 .dot{ width:8px;height:8px;border-radius:50%;background:var(--gold); display:inline-block; }
@@ -134,11 +136,19 @@
   .ok-box{ background:#EAF6EC; border:1px solid #9AD6A6; border-radius:8px; padding:10px 14px; font-size:13px; color:#215D33; margin-bottom:14px; }
   .phrase-item{ display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,.08); border-radius:6px; padding:8px 10px; margin-top:6px; font-size:13px; color:#F4EFE2; }
   .phrase-item button{ background:none; border:none; color:#E8A8A0; cursor:pointer; font-size:13px; }
-  #stepDots{ display:flex; justify-content:center; gap:10px; margin:6px 0 16px; }
-  .step-dot{ width:28px; height:28px; border-radius:50%; background:#EDEAE1; color:#7c7869; display:flex;
-    align-items:center; justify-content:center; font-size:12px; font-weight:700; border:2px solid transparent; }
-  .step-dot.done{ background:var(--gold-light); color:var(--navy); }
-  .step-dot.current{ background:var(--navy); color:#fff; border-color:var(--gold); }
+  #stepDots{ display:flex; justify-content:center; align-items:flex-start; gap:0; margin:10px 0 18px; position:relative; }
+  .step-item{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
+  .step-item .step-line{ position:absolute; top:15px; right:50%; width:100%; height:2px; background:var(--line); z-index:0; }
+  .step-item:first-child .step-line{ display:none; }
+  .step-item.done .step-line, .step-item.current .step-line{ background:var(--gold); }
+  .step-dot{ width:30px; height:30px; border-radius:50%; background:#EDEAE1; color:#7c7869; display:flex;
+    align-items:center; justify-content:center; font-size:13px; font-weight:700; border:2px solid transparent;
+    z-index:1; transition:background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease; }
+  .step-dot.done{ background:var(--gold); color:#fff; }
+  .step-dot.current{ background:var(--navy); color:#fff; border-color:var(--gold); transform:scale(1.1); }
+  .step-label{ margin-top:6px; font-size:10.5px; color:#8a8574; text-align:center; max-width:90px; line-height:1.3; transition:color .25s ease; }
+  .step-item.current .step-label{ color:var(--navy); font-weight:700; }
+  .step-item.done .step-label{ color:var(--gold); }
   .font-size-controls{ display:flex; gap:6px; margin-bottom:10px; justify-content:flex-end; align-items:center; }
   .font-size-controls button{ width:32px; height:32px; border-radius:6px; border:1px solid var(--gold-light);
     background:rgba(255,255,255,.1); color:#F4EFE2; font-weight:700; cursor:pointer; font-size:14px; }
@@ -170,7 +180,7 @@
   #darkModeToggle{ position:fixed; top:14px; left:14px; z-index:60; width:38px; height:38px; border-radius:50%;
     border:1px solid var(--gold); background:rgba(255,255,255,.15); color:#fff; font-size:16px; cursor:pointer;
     display:flex; align-items:center; justify-content:center; }
-  body.dark{ --paper:#171A1F; --ink:#E9E7DD; --line:#2C3A48; --grey-bg:#222B33; --grey-txt:#9aa7b0; --navy:#3E6690; --navy-2:#233C54; }
+  body.dark{ --paper:#171A1F; --ink:#E9E7DD; --line:#2C3A48; --grey-bg:#222B33; --grey-txt:#9aa7b0; --navy:#3D9174; --navy-2:#1F4A3A; }
   body.dark .card{ background:#1C2A22; border-color:#2B3A30; box-shadow:0 1px 3px rgba(0,0,0,.4); }
   body.dark input[type=text], body.dark select, body.dark textarea{ background:#22302A; color:#E9E7DD; border-color:#3A4B41; }
   body.dark input[disabled]{ background:#1A2620; color:#7c8a80; }
@@ -354,6 +364,7 @@
           <label>صفة من حضر عنه</label>
           <div class="choice-group" data-group="plaintiff-repType">
             <div class="choice-btn active" data-value="وكيل">وكيل</div>
+            <div class="choice-btn" data-value="وكيل شركة">وكيل عن الشركة</div>
             <div class="choice-btn" data-value="ممثل">ممثل نظامي</div>
           </div>
         </div>
@@ -451,6 +462,10 @@
           </div>
         </div>
 
+        <div class="field" id="plaintiff-repName-field" style="display:none;">
+          <label>اسم الممثل النظامي <span style="color:#8C3B3B;">*</span></label>
+          <input type="text" id="plaintiff-repName" placeholder="اسم الممثل النظامي" required>
+        </div>
         <div class="field" id="plaintiff-rep-num-field" style="display:none;">
           <label>صفة الممثل النظامي <span style="color:#8C3B3B;">*</span></label>
           <input type="text" id="plaintiff-rep-num" placeholder="مثال: المدير العام، الشريك المفوّض، رئيس مجلس الإدارة" required>
@@ -563,6 +578,7 @@
           <label>صفة من حضر عنه</label>
           <div class="choice-group" data-group="defendant-repType">
             <div class="choice-btn active" data-value="وكيل">وكيل</div>
+            <div class="choice-btn" data-value="وكيل شركة">وكيل عن الشركة</div>
             <div class="choice-btn" data-value="ممثل">ممثل نظامي</div>
           </div>
         </div>
@@ -660,6 +676,10 @@
           </div>
         </div>
 
+        <div class="field" id="defendant-repName-field" style="display:none;">
+          <label>اسم الممثل النظامي <span style="color:#8C3B3B;">*</span></label>
+          <input type="text" id="defendant-repName" placeholder="اسم الممثل النظامي" required>
+        </div>
         <div class="field" id="defendant-rep-num-field" style="display:none;">
           <label>صفة الممثل النظامي <span style="color:#8C3B3B;">*</span></label>
           <input type="text" id="defendant-rep-num" placeholder="مثال: المدير العام، الشريك المفوّض، رئيس مجلس الإدارة" required>
@@ -1031,7 +1051,7 @@ populateTimeSelect('openHour','openMinute','openPeriod');
 /* ---------- state ---------- */
 function freshPartyState(){
   return { gender:'م', name:'', attendance:'أصالة', repType:'وكيل', repIsLawyer:'نعم', agentGender:'م',
-    agentName:'', agentId:'', wakalaNum:'', licenseNum:'', repNum:'', occurrence:1, tabligh:'', notifyStatus:'تبلغ',
+    agentName:'', agentId:'', wakalaNum:'', licenseNum:'', repNum:'', repName:'', occurrence:1, tabligh:'', notifyStatus:'تبلغ',
     kinshipType:'نسب', kinship:'', asharDirection:'الزوجة', kinshipAshar:'', hasAccompanyingAgent:false, specialCase:'none',
     oathAbsence:'لا', oathTablighNum:'',
     nationalityType:'سعودي', saudiId:'', foreignNationality:'', iqamaNum:'',
@@ -1351,12 +1371,18 @@ function handleChoice(key, value){
     updateVisibility(party);
   } else if(field === 'repType'){
     state[party].repType = value;
-    $(`${party}-wakeel-fields`).style.display = value==='وكيل' ? 'block' : 'none';
+    $(`${party}-wakeel-fields`).style.display = (value==='وكيل' || value==='وكيل شركة') ? 'block' : 'none';
+    $(`${party}-repName-field`).style.display = value==='ممثل' ? 'block' : 'none';
     $(`${party}-rep-num-field`).style.display = value==='ممثل' ? 'block' : 'none';
+    if(value === 'وكيل شركة'){
+      $(`${party}-kinship-field`).style.display = 'none';
+    } else if(value === 'وكيل'){
+      $(`${party}-kinship-field`).style.display = state[party].repIsLawyer==='لا' ? 'block' : 'none';
+    }
   } else if(field === 'repIsLawyer'){
     state[party].repIsLawyer = value;
     $(`${party}-license-field`).style.display = value==='نعم' ? 'block' : 'none';
-    $(`${party}-kinship-field`).style.display = value==='لا' ? 'block' : 'none';
+    $(`${party}-kinship-field`).style.display = (value==='لا' && state[party].repType !== 'وكيل شركة') ? 'block' : 'none';
   } else if(field === 'agentGender'){
     state[party].agentGender = value;
     updateAgentGenderedLabels(party);
@@ -1527,6 +1553,7 @@ function updateClaimCardVisibility(){
     render();
   });
   $(`${party}-rep-num`).addEventListener('input', e=>{ state[party].repNum = e.target.value; render(); });
+  $(`${party}-repName`).addEventListener('input', e=>{ state[party].repName = e.target.value; render(); });
   $(`${party}-tabligh`).addEventListener('input', e=>{ state[party].tabligh = e.target.value; render(); });
   if(party === 'defendant'){
     $('defendant-oathTablighNum').addEventListener('input', e=>{ state.defendant.oathTablighNum = e.target.value; render(); });
@@ -1693,7 +1720,7 @@ function partyLabel(role, gender){
   return gender==='م' ? 'المدعى عليه' : 'المدعى عليها';
 }
 
-const videoCallFullPhrase = 'عبر الاتصال المرئي بأطراف الدَّعوى من خلال الأنظمة الالكترونية المعتمدة لوزارة العدل، استناداً إلى الفقرة الرابعة من قرار رئيس المجلس الأعلى للقضاء رقم (17388) وتاريخ 5/10/1441هـ والمتضمنة: " تعقد المحكمة جلساتها عن بُعد عبر الأنظمة الالكترونية لوزارة العدل دون الحاجة إلى حضور أطراف الدَّعوى؛ إلا في الحالات التي تقتضي حضورهم "';
+const videoCallFullPhrase = 'عبر الاتصال المرئي بأطراف الدَّعوى -من خلال الأنظمة الالكترونية المعتمدة لوزارة العدل، استناداً إلى الفقرة الرابعة من قرار رئيس المجلس الأعلى للقضاء رقم (17388) وتاريخ 5/10/1441هـ والمتضمنة: " تعقد المحكمة جلساتها عن بُعد عبر الأنظمة الالكترونية لوزارة العدل دون الحاجة إلى حضور أطراف الدَّعوى؛ إلا في الحالات التي تقتضي حضورهم " -';
 
 function buildOpening(){
   const judge = $('judgeName').value.trim() || '...........';
@@ -1701,7 +1728,7 @@ function buildOpening(){
   const rawMode = $('sessionMode').value.trim();
   const mode = rawMode === 'عبر الاتصال المرئي' ? videoCallFullPhrase : (rawMode || '...........');
   const time = buildTimeArabic(Number($('openHour').value), Number($('openMinute').value), $('openPeriod').value);
-  return `فلديّ أنا ${judge} القاضي بمحكمة ${court} افتتحتُ الجلسة ${mode} عند الساعة ${time}،`;
+  return `فلديّ أنا ${judge} القاضي بمحكمة ${court} افتتحتُ الجلسة ${mode}عند الساعة ${time}،`;
 }
 
 function agentPossessive(agentGender, partySuffix){
@@ -1786,7 +1813,7 @@ function buildPartyClause(role){
   }
 
   if(s.attendance === 'تمثيل'){
-    if(s.repType === 'وكيل'){
+    if(s.repType === 'وكيل' || s.repType === 'وكيل شركة'){
       const wakalaNum = s.wakalaNum || '...........';
       const agentName = s.agentName.trim();
       const agentId = s.agentId || '...........';
@@ -1798,10 +1825,13 @@ function buildPartyClause(role){
         const lic = s.licenseNum || '...........';
         return `${agentVerb} عن ${name} ${agentPoss} ${lawyerWord}${namePart}، بموجب الهوية رقم (${agentId})، بموجب الوكالة الشرعية رقم (${wakalaNum})${buildAgencyVerificationClause(s.agentGender)} ورخصة مزاولة المحاماة رقم (${lic})`;
       }
-      return `${agentVerb} عن ${name} ${agentPoss}${namePart}، بموجب الهوية رقم (${agentId})، بموجب الوكالة الشرعية رقم (${wakalaNum})${buildAgencyVerificationClause(s.agentGender)}${buildKinshipPhrase(s, name)}`;
+      const kinshipPart = s.repType === 'وكيل شركة' ? '' : buildKinshipPhrase(s, name);
+      return `${agentVerb} عن ${name} ${agentPoss}${namePart}، بموجب الهوية رقم (${agentId})، بموجب الوكالة الشرعية رقم (${wakalaNum})${buildAgencyVerificationClause(s.agentGender)}${kinshipPart}`;
     } else {
       const repCapacity = s.repNum.trim() || '...........';
-      return `حضر عن ${name} ممثل${suffix} النظامي بصفة: ${repCapacity}`;
+      const repName = s.repName.trim();
+      const repNamePart = repName ? ` ${repName}` : '';
+      return `حضر عن ${name} ممثل${suffix} النظامي${repNamePart}، بصفة: ${repCapacity}`;
     }
   }
 
@@ -2029,30 +2059,37 @@ function buildClaimEvidenceText(){
   const pSuffix = pGender==='م' ? 'ه' : 'ها';
   const claimText = c.text.trim() || '.......';
 
-  const isRepresented = s.attendance === 'تمثيل' && s.repType === 'وكيل';
+  const isRepresented = s.attendance === 'تمثيل' && (s.repType === 'وكيل' || s.repType === 'وكيل شركة');
   const speakerGender = isRepresented ? s.agentGender : pGender;
   const speakerSuffix = speakerGender==='م' ? 'ه' : 'ها';
   const decideVerb = speakerGender==='م' ? 'قرر قائلاً' : 'قررت قائلة';
-  const moakkelPhrase = pGender==='م' ? 'موكلي' : 'موكلتي';
+  // موكلي/موكلتي: ضمير المتكلم (يُستخدم داخل كلام الوكيل المقتبس عند إجابته)
+  const moakkelFirst = pGender==='م' ? 'موكلي' : 'موكلتي';
+  // موكلك/موكلتك: ضمير المخاطَب (يُستخدم في السؤال المباشر الموجّه للوكيل)
+  const moakkelSecond = pGender==='م' ? 'موكلك' : 'موكلتك';
+  // موكله/موكلها/موكلته/موكلتها: ضمير الغائب (يُستخدم في وصف الدائرة لموضوع السؤال قبل الاقتباس)
+  const moakkelThird = pGender==='م'
+    ? (speakerGender==='م' ? 'موكله' : 'موكلها')
+    : (speakerGender==='م' ? 'موكلته' : 'موكلتها');
   const addresseeForOath = isRepresented ? `وكيل${s.agentGender==='ف'?'ة':''} ${pName}` : pName;
 
   let out = ` وبالاطلاع على دعوى ${pName} وجدت نصها: "${claimText}" أ.هـ.`;
 
   if(isRepresented){
-    out += ` وبسؤال${speakerSuffix} عن بينة ${moakkelPhrase} ${decideVerb}: `;
+    out += ` وبسؤال${speakerSuffix} عن بينة ${moakkelThird} ${decideVerb}: `;
   } else {
     out += ` وبسؤال${pSuffix} عن بينت${pSuffix} ${decideVerb}: `;
   }
 
   if(c.evidenceChoice === 'none'){
-    out += isRepresented ? `لا بينة لدى ${moakkelPhrase}` : `لا بينة لدي`;
-    out += buildOathBlock(pGender, dName, addresseeForOath, c.requestOath, c.declineOath, getAutoOathDefendantStatus(), isRepresented, moakkelPhrase);
+    out += isRepresented ? `لا بينة لدى ${moakkelFirst}` : `لا بينة لدي`;
+    out += buildOathBlock(pGender, dName, addresseeForOath, c.requestOath, c.declineOath, getAutoOathDefendantStatus(), isRepresented, moakkelFirst);
   } else {
     const items = [...c.evidenceItems].map(item=>
       item === 'مستند رسمي آخر' ? (c.otherDocumentText.trim() || 'مستند رسمي آخر') : item
     );
     const evText = items.length ? items.join('، و') : '...........';
-    out += isRepresented ? `بينة ${moakkelPhrase} هي: ${evText}.` : `بينتي هي: ${evText}.`;
+    out += isRepresented ? `بينة ${moakkelFirst} هي: ${evText}.` : `بينتي هي: ${evText}.`;
     out += ` وقد جرى من الدائرة الاطلاع على بينات ${pName} فوجدتها كما ${pGender==='م' ? 'ذكر' : 'ذكرت'}.`;
 
     if(c.evidenceItems.includes('شهادة شهود') && c.witnesses.length > 0){
@@ -2061,17 +2098,17 @@ function buildClaimEvidenceText(){
 
     if(c.hasMoreEvidence === 'لا'){
       if(isRepresented){
-        out += ` وبسؤال${speakerSuffix} هل لدى ${moakkelPhrase} مزيد بينة؟ ${decideVerb}: ليس لدى ${moakkelPhrase} مزيد بينة`;
+        out += ` وبسؤال${speakerSuffix} هل لدى ${moakkelSecond} مزيد بينة؟ ${decideVerb}: ليس لدى ${moakkelFirst} مزيد بينة`;
       } else {
-        out += ` وبسؤال${pSuffix} هل لدي${pSuffix} مزيد بينة؟ ${decideVerb}: ليس لدي مزيد بينة`;
+        out += ` وبسؤال${pSuffix} هل لديك مزيد بينة؟ ${decideVerb}: ليس لدي مزيد بينة`;
       }
-      out += buildOathBlock(pGender, dName, addresseeForOath, c.requestOath, c.declineOath, getAutoOathDefendantStatus(), isRepresented, moakkelPhrase);
+      out += buildOathBlock(pGender, dName, addresseeForOath, c.requestOath, c.declineOath, getAutoOathDefendantStatus(), isRepresented, moakkelFirst);
     } else if(c.hasMoreEvidence === 'نعم'){
       const moreText = c.moreEvidenceText.trim() || '...........';
       if(isRepresented){
-        out += ` وبسؤال${speakerSuffix} هل لدى ${moakkelPhrase} مزيد بينة؟ ${decideVerb}: نعم، بينة ${moakkelPhrase} الإضافية هي: ${moreText}.`;
+        out += ` وبسؤال${speakerSuffix} هل لدى ${moakkelSecond} مزيد بينة؟ ${decideVerb}: نعم، بينة ${moakkelFirst} الإضافية هي: ${moreText}.`;
       } else {
-        out += ` وبسؤال${pSuffix} هل لدي${pSuffix} مزيد بينة؟ ${decideVerb}: نعم، بينت${pSuffix} الإضافية هي: ${moreText}.`;
+        out += ` وبسؤال${pSuffix} هل لديك مزيد بينة؟ ${decideVerb}: نعم، بينت${pSuffix} الإضافية هي: ${moreText}.`;
       }
     }
   }
@@ -2199,7 +2236,7 @@ function showStep(){
   $('stepLabel').textContent = `خطوة ${idx+1} من ${list.length}: ${stepTitles[currentStep]}`;
   $('stepDots').innerHTML = list.map((n,i)=>{
     const cls = i < idx ? 'done' : (i === idx ? 'current' : '');
-    return `<div class="step-dot ${cls}">${i+1}</div>`;
+    return `<div class="step-item ${cls}"><div class="step-line"></div><div class="step-dot ${cls}">${i+1}</div><div class="step-label">${stepTitles[n]}</div></div>`;
   }).join('');
   $('stepValidationMsg').style.display = 'none';
   window.scrollTo({top:0, behavior:'smooth'});
@@ -2374,22 +2411,23 @@ function updateWarnings(){
         }
       }
     }
-    const needsWakeelCheck = s.attendance === 'تمثيل' && s.repType === 'وكيل';
+    const needsWakeelCheck = s.attendance === 'تمثيل' && (s.repType === 'وكيل' || s.repType === 'وكيل شركة');
     const needsAccompanyCheck = s.attendance === 'أصالة' && s.hasAccompanyingAgent;
     if(needsWakeelCheck || needsAccompanyCheck){
       if(!s.agentName.trim()) w.push(`لم يُدخل اسم وكيل ${partyLabelAr[p]}.`);
       if(!s.agentId || s.agentId.length !== 10) w.push(`رقم هوية وكيل ${partyLabelAr[p]} غير مكتمل (10 أرقام).`);
       if(!s.wakalaNum.trim()) w.push(`لم يُدخل رقم الوكالة الشرعية لوكيل ${partyLabelAr[p]}.`);
       if(s.repIsLawyer === 'نعم' && !s.licenseNum.trim()) w.push(`لم يُدخل رقم رخصة المحاماة لوكيل ${partyLabelAr[p]}.`);
-      if(s.repIsLawyer === 'لا'){
+      if(s.repIsLawyer === 'لا' && s.repType !== 'وكيل شركة'){
         const isAshar = s.kinshipType === 'أصهار';
         const value = isAshar ? s.kinshipAshar : s.kinship;
         const degreeTable = isAshar ? asharDegree : kinshipDegree;
         if(!value) w.push(`لم تُحدَّد صلة القرابة لوكيل ${partyLabelAr[p]} غير المحامي.`);
         else if(value === 'أخرى' || !degreeTable[value]) w.push(`⚠️ صلة قرابة وكيل ${partyLabelAr[p]} غير مقبولة (خارج الدرجات الأربع).`);
       }
-    } else if(s.attendance === 'تمثيل' && s.repType !== 'وكيل' && !s.repNum.trim()){
-      w.push(`لم تُحدَّد صفة الممثل النظامي لـ${partyLabelAr[p]}.`);
+    } else if(s.attendance === 'تمثيل' && s.repType === 'ممثل'){
+      if(!s.repName.trim()) w.push(`لم يُدخل اسم الممثل النظامي لـ${partyLabelAr[p]}.`);
+      if(!s.repNum.trim()) w.push(`لم تُحدَّد صفة الممثل النظامي لـ${partyLabelAr[p]}.`);
     }
     if(s.attendance === 'لم يحضر' && s.notifyStatus === 'تبلغ' && !s.tabligh.trim()){
       w.push(`لم يُدخل رقم مهمّة التبليغ لـ${partyLabelAr[p]}.`);
