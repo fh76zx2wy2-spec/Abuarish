@@ -1388,6 +1388,24 @@ function updateGenderedLabels(party){
   }
 }
 
+function updateCompanyAttendanceOptions(party){
+  const attGroup = document.querySelector(`.choice-group[data-group="${party}-attendance"]`);
+  if(!attGroup) return;
+  const asalaBtn = attGroup.querySelector('[data-value="أصالة"]');
+  const representedBtn = attGroup.querySelector('[data-value="تمثيل"]');
+  const isCompany = state[party].entityType === 'شركة';
+  if(asalaBtn) asalaBtn.style.display = isCompany ? 'none' : '';
+  if(isCompany && state[party].attendance === 'أصالة'){
+    state[party].attendance = 'تمثيل';
+    state[party].hasAccompanyingAgent = false;
+    const accompanyCheckbox = $(`${party}-hasAccompanyingAgent`);
+    if(accompanyCheckbox) accompanyCheckbox.checked = false;
+    attGroup.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('active'));
+    if(representedBtn) representedBtn.classList.add('active');
+    updateVisibility(party);
+  }
+}
+
 function handleChoice(key, value){
   if(key === 'evidence-choice'){
     state.claim.evidenceChoice = value;
@@ -1476,6 +1494,7 @@ function handleChoice(key, value){
       updateGenderedLabels(party);
       updateAgentGenderedLabels(party);
     }
+    updateCompanyAttendanceOptions(party);
   } else if(field === 'oathAbsence'){
     state.defendant.oathAbsence = value;
     $('defendant-oathTabligh-field').style.display = value === 'نعم' ? 'block' : 'none';
