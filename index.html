@@ -2284,7 +2284,8 @@ function render(){
         text += ' واستناداً إلى المادة السابعة والستون بعد المائة من نظام المرافعات الشرعية: إذا انتهت ولايـة القـاضي بالنسبة إلى قضيـة ما قبل النطق بالحكم فيها، فلخلفه الاستمرار في نظرها من الحد الذي انتهت إليه إجراءاتها لدى سلفه بعد تلاوة ما تم ضبطه سابقًا على الخصوم، فإن كانت موقعة بتوقيع القاضي السابق على توقيعات المترافعين والشهود فيعتمدها، وإن كان ما تم ضبطه غير موقع من المترافعين أو أحدهم أو القاضي ولم يصدّق المترافعون عليه فإن المرافعة تعاد من جديد.';
         text += buildPreviousSessionRatification();
       }
-      if(state.closeArgumentEnabled){
+      const oathNotificationAdjournment = state.sessionType === 'new' && state.claim.requestOath && !state.claim.declineOath && state.defendant.attendance === 'لم يحضر';
+      if(state.closeArgumentEnabled && !oathNotificationAdjournment){
         text = text.replace(/\.\s*$/, '') + '، ' + buildClosingArgumentText() + '.';
       }
     }
